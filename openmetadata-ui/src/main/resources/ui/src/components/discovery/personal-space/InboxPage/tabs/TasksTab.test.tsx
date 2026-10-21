@@ -379,6 +379,21 @@ describe('TasksTab', () => {
       });
     });
 
+    it('keeps the toolbar when a filter hides the loaded rows and a later page fails', () => {
+      hookState = {
+        items: [{ id: 't2', type: 'TestCaseResolution' } as unknown as Task],
+        isLoading: false,
+        total: 2,
+        error: { response: { status: 500 } },
+      };
+      renderTab();
+
+      fireEvent.click(screen.getByTestId('toolbar-filter-tag'));
+
+      // The user can still clear the filter that hides the loaded rows.
+      expect(screen.getByTestId('toolbar')).toBeInTheDocument();
+    });
+
     it('drops a status badge whose count failed instead of showing 0', () => {
       mockCountQueries = [
         { data: 4, isError: false },

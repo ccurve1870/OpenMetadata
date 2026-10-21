@@ -96,6 +96,8 @@ import {
   ActivityFeedTabs,
   TaskFilterBarProps,
 } from './ActivityFeedTab.interface';
+import { isListLoadFailed } from './ActivityFeedTab.utils';
+
 const TaskTabNew = withSuspenseFallback(
   lazy(() =>
     import('../../Entity/Task/TaskTab/TaskTabNew.component').then((m) => ({
@@ -402,14 +404,6 @@ const ActivityFeedTabList = ({
  * The list's empty placeholder, or why it is empty when its fetch failed: a
  * failure must not read as "no tasks".
  */
-// Only a failed load that left nothing listed replaces the list: a failed
-// later page keeps the loaded rows (the provider toasts the failure).
-const isListLoadFailed = (
-  error: AxiosError | undefined,
-  loading: boolean,
-  hasRows: boolean
-) => Boolean(error) && !loading && !hasRows;
-
 // Rendered in place of the list, not as its empty text: the list wraps that
 // text in a legacy illustration the core placeholder would sit on top of.
 const ActivityFeedListError = ({

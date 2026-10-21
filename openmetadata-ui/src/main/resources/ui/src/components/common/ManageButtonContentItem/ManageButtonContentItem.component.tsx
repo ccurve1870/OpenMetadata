@@ -32,7 +32,7 @@ export const ManageButtonItemLabel = ({
       })}
       data-testid={id}>
       <div
-        className="tw:flex tw:shrink-0 tw:self-center tw:text-fg-quaternary"
+        className="tw:flex tw:shrink-0 tw:self-center tw:text-fg-secondary"
         data-testid={`${id}-icon`}>
         <Icon width="18px" />
       </div>

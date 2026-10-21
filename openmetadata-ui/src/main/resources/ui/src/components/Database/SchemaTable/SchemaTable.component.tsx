@@ -13,12 +13,10 @@
 
 import {
   Button,
-  ButtonUtility,
   Dropdown,
   Grid,
   Label,
   Select,
-  Tooltip,
   Typography,
 } from '@openmetadata/ui-core-components';
 import { AxiosError } from 'axios';
@@ -28,8 +26,8 @@ import { EntityTags, TagFilterOptions } from 'Models';
 import { Key, lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as IconEdit } from '../../../assets/svg/edit-new.svg';
 import { ReactComponent as IconSortIndicator } from '../../../assets/svg/ic-down-up-arrow.svg';
+import { WidgetEditButton } from '../../common/WidgetActionButton/WidgetActionButton';
 import { ReactComponent as IconSort } from '../../../assets/svg/ic-sort-both.svg';
 import {
   INITIAL_PAGING_VALUE,
@@ -717,18 +715,15 @@ const SchemaTable = () => {
                 {renderHighlightedText(highlightSearchText(name, searchText))}
               </Typography>
             </div>
-            <div className="d-flex items-center">
+            <div className="d-flex items-center gap-2">
               {editDisplayNamePermission && (
-                <Tooltip arrow placement="top" title={t('label.edit')}>
-                  <ButtonUtility
-                    className="hover-cell-icon"
-                    color="tertiary"
-                    data-testid="edit-displayName-button"
-                    icon={IconEdit}
-                    size="xs"
-                    onClick={() => handleEditDisplayNameClick(record)}
-                  />
-                </Tooltip>
+                <WidgetEditButton
+                  compact
+                  className="hover-cell-icon"
+                  data-testid="edit-displayName-button"
+                  title={t('label.edit')}
+                  onClick={() => handleEditDisplayNameClick(record)}
+                />
               )}
               {record.fullyQualifiedName && (
                 <CopyLinkButton

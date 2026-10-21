@@ -149,6 +149,14 @@ const hasNothingToShow = (
   list: Parameters<typeof isListSettled>[0]
 ) => Boolean(error) || (visibleTasks.length === 0 && isListSettled(list));
 
+// The error takes the whole tab only when nothing loaded and nothing is
+// narrowed; otherwise the toolbar stays so the user can change the query.
+const isWholeTabLoadFailed = (
+  error: unknown,
+  tasks: Task[],
+  isNarrowed: boolean
+) => Boolean(error) && tasks.length === 0 && !isNarrowed;
+
 interface TasksEmptyStateProps {
   // The list failed to load; shown in place of any empty state.
   error?: unknown;
@@ -774,7 +782,7 @@ const TasksTab: React.FC<TasksTabProps> = ({
         handleCommentsChanged={handleCommentsChanged}
         handleResolved={handleResolved}
         handleTaskUpdated={handleTaskUpdated}
-        isLoadFailed={Boolean(error) && visibleTasks.length === 0}
+        isLoadFailed={isWholeTabLoadFailed(error, tasks, isNarrowed)}
         isLoading={isLoading}
         isLoadingMore={isLoadingMore}
         scrollRef={scrollRef}
