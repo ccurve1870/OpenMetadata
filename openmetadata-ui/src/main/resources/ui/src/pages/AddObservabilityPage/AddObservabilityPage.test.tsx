@@ -252,7 +252,12 @@ describe('Add ObservabilityPage Alerts Page Tests', () => {
       });
     });
 
-    expect(await screen.findByText('label.no-entity')).toBeInTheDocument();
+    expect(
+      await screen.findByText('label.alert-not-found')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('message.alert-not-found-description')
+    ).toBeInTheDocument();
     expect(
       screen.queryByText('message.something-went-wrong')
     ).not.toBeInTheDocument();

@@ -526,7 +526,10 @@ describe('AlertDetailsPage', () => {
 
     renderPage(<AlertDetailsPage />);
 
-    expect(screen.getByText('label.no-entity:label.alert')).toBeInTheDocument();
+    expect(screen.getByText('label.alert-not-found')).toBeInTheDocument();
+    expect(
+      screen.getByText('message.alert-not-found-description')
+    ).toBeInTheDocument();
     expect(
       screen.queryByText('message.something-went-wrong')
     ).not.toBeInTheDocument();

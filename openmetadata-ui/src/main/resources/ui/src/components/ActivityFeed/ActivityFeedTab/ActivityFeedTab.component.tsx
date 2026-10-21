@@ -402,6 +402,14 @@ const ActivityFeedTabList = ({
  * The list's empty placeholder, or why it is empty when its fetch failed: a
  * failure must not read as "no tasks".
  */
+// Only a failed load that left nothing listed replaces the list: a failed
+// later page keeps the loaded rows (the provider toasts the failure).
+const isListLoadFailed = (
+  error: AxiosError | undefined,
+  loading: boolean,
+  hasRows: boolean
+) => Boolean(error) && !loading && !hasRows;
+
 // Rendered in place of the list, not as its empty text: the list wraps that
 // text in a legacy illustration the core placeholder would sit on top of.
 const ActivityFeedListError = ({
@@ -1028,6 +1036,8 @@ export const ActivityFeedTab = ({
       : !isEmpty(entityThread);
   }, [isTaskActiveTab, isAllTab, tasks, activityEvents, entityThread]);
 
+  const showListError = isListLoadFailed(listError, loading, hasListRows);
+
   const getRightPanelContent = () => {
     if (isTaskActiveTab && selectedTask) {
       return (
@@ -1135,7 +1145,7 @@ export const ActivityFeedTab = ({
       />
       <div
         className={classNames('center-container', {
-          'full-width': isFullWidth,
+          'full-width': isFullWidth || showListError,
           'three-panel-layout':
             layoutType === ActivityFeedLayoutType.THREE_PANEL,
         })}
@@ -1148,9 +1158,9 @@ export const ActivityFeedTab = ({
           taskFilterOptions={taskFilterOptions}
           taskToggle={TaskToggle()}
         />
-        {listError && !loading ? (
+        {showListError ? (
           <ActivityFeedListError
-            error={listError}
+            error={listError as AxiosError}
             isTaskList={isTaskActiveTab}
             onRetry={() => handleFeedFetchFromFeedList()}
           />
@@ -1188,15 +1198,17 @@ export const ActivityFeedTab = ({
         )}
       </div>
 
-      <ActivityFeedTabRightPanel
-        content={getRightPanelContent()}
-        hasSelection={hasRightPanelSelection}
-        isFullWidth={isFullWidth}
-        layoutType={layoutType}
-        loader={loader}
-        loading={loading}
-        placeholder={getRightPanelPlaceholder}
-      />
+      {!showListError && (
+        <ActivityFeedTabRightPanel
+          content={getRightPanelContent()}
+          hasSelection={hasRightPanelSelection}
+          isFullWidth={isFullWidth}
+          layoutType={layoutType}
+          loader={loader}
+          loading={loading}
+          placeholder={getRightPanelPlaceholder}
+        />
+      )}
     </div>
   );
 };

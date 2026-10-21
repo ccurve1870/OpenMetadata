@@ -23,6 +23,7 @@ import {
   Edit01,
   RefreshCw04,
   Trash01,
+  Bell01,
 } from '@openmetadata/ui-core-components/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -412,7 +413,9 @@ const AlertDetailsPage = ({
       if (status === ClientErrors.NOT_FOUND) {
         loadErrorPlaceholder = (
           <NoDataPlaceholder
-            title={t('label.no-entity', { entity: t('label.alert') })}
+            description={t('message.alert-not-found-description')}
+            icon={<Bell01 className="tw:text-secondary" />}
+            title={t('label.alert-not-found')}
           />
         );
       } else if (status === ClientErrors.FORBIDDEN) {

@@ -361,7 +361,8 @@ describe('TasksTab', () => {
       };
       renderTab();
 
-      expect(screen.getByTestId('toolbar')).toBeInTheDocument();
+      // Nothing loaded, so the error takes the whole tab like a 403 does.
+      expect(screen.queryByTestId('toolbar')).not.toBeInTheDocument();
 
       expect(
         screen.getByText('message.something-went-wrong')

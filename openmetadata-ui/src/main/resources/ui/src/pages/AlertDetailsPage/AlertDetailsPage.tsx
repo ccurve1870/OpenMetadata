@@ -12,6 +12,7 @@
  */
 
 import { Box } from '@openmetadata/ui-core-components';
+import { Bell01 } from '@openmetadata/ui-core-components/icons';
 import { isUndefined } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import NoDataPlaceholder from '../../components/common/EmptyPlaceholder/NoDataPlaceholder';
@@ -73,7 +74,9 @@ function AlertDetailsPage({
     if (status === ClientErrors.NOT_FOUND) {
       loadErrorPlaceholder = (
         <NoDataPlaceholder
-          title={t('label.no-entity', { entity: t('label.alert') })}
+          description={t('message.alert-not-found-description')}
+          icon={<Bell01 className="tw:text-secondary" />}
+          title={t('label.alert-not-found')}
         />
       );
     } else if (status === ClientErrors.FORBIDDEN) {

@@ -12,6 +12,7 @@
  */
 
 import { Box, Card, Typography } from '@openmetadata/ui-core-components';
+import { Bell01 } from '@openmetadata/ui-core-components/icons';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +50,9 @@ function AddObservabilityPage({
     if (status === ClientErrors.NOT_FOUND) {
       return (
         <NoDataPlaceholder
-          title={t('label.no-entity', { entity: t('label.alert') })}
+          description={t('message.alert-not-found-description')}
+          icon={<Bell01 className="tw:text-secondary" />}
+          title={t('label.alert-not-found')}
         />
       );
     }

@@ -533,6 +533,9 @@ describe('ActivityFeedTab', () => {
       expect(
         screen.queryByText('message.no-open-tasks-title')
       ).not.toBeInTheDocument();
+      // The error takes the whole card: no list and no right-hand panel.
+      expect(screen.queryByTestId('task-list')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-placeholder')).not.toBeInTheDocument();
 
       mockGetTaskData.mockClear();
       fireEvent.click(screen.getByRole('button', { name: 'label.reload' }));
@@ -545,6 +548,17 @@ describe('ActivityFeedTab', () => {
         'test.db.table',
         'open'
       );
+    });
+
+    it('keeps the loaded rows when a later page fails', async () => {
+      mockTasks = [{ id: 'loaded-task' }];
+      mockListError = { response: { status: 500 } };
+      renderComponent(ActivityFeedTabs.TASKS);
+
+      expect(await screen.findByTestId('task-list')).toBeInTheDocument();
+      expect(
+        screen.queryByText('message.something-went-wrong')
+      ).not.toBeInTheDocument();
     });
 
     it('shows a permission message without a retry for a 403', async () => {
