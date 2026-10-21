@@ -20,10 +20,10 @@ import {
   Typography,
 } from '@openmetadata/ui-core-components';
 import {
+  Bell01,
   Edit01,
   RefreshCw04,
   Trash01,
-  Bell01,
 } from '@openmetadata/ui-core-components/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
