@@ -11,6 +11,7 @@
  *  limitations under the License.
  */
 import {
+  Box,
   Button,
   ButtonGroup,
   ButtonGroupItem,
@@ -24,7 +25,6 @@ import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 import {
   lazy,
-  ReactNode,
   RefObject,
   useCallback,
   useEffect,
@@ -402,34 +402,33 @@ const ActivityFeedTabList = ({
  * The list's empty placeholder, or why it is empty when its fetch failed: a
  * failure must not read as "no tasks".
  */
-const ActivityFeedListPlaceholder = ({
+// Rendered in place of the list, not as its empty text: the list wraps that
+// text in a legacy illustration the core placeholder would sit on top of.
+const ActivityFeedListError = ({
   error,
-  fallback,
   isTaskList,
   onRetry,
 }: {
-  error?: AxiosError;
-  fallback: ReactNode;
+  error: AxiosError;
   isTaskList: boolean;
   onRetry: () => void;
 }) => {
   const { t } = useTranslation();
-
-  if (!error) {
-    return <>{fallback}</>;
-  }
-
   const entity = isTaskList ? t('label.task-plural') : t('label.activity-feed');
 
-  return error?.response?.status === ClientErrors.FORBIDDEN ? (
-    <PermissionPlaceholder
-      permissionValue={t('label.view-entity', { entity })}
-    />
-  ) : (
-    <SomethingWentWrongPlaceholder
-      description={t('server.entity-fetch-error', { entity })}
-      onReload={onRetry}
-    />
+  return (
+    <Box className="tw:relative tw:min-h-[calc(100vh_-_24rem)] tw:w-full">
+      {error.response?.status === ClientErrors.FORBIDDEN ? (
+        <PermissionPlaceholder
+          permissionValue={t('label.view-entity', { entity })}
+        />
+      ) : (
+        <SomethingWentWrongPlaceholder
+          description={t('server.entity-fetch-error', { entity })}
+          onReload={onRetry}
+        />
+      )}
+    </Box>
   );
 };
 
@@ -1149,33 +1148,34 @@ export const ActivityFeedTab = ({
           taskFilterOptions={taskFilterOptions}
           taskToggle={TaskToggle()}
         />
-        <ActivityFeedTabList
-          activityEvents={activityEvents}
-          emptyPlaceholderText={
-            <ActivityFeedListPlaceholder
-              error={listError}
-              fallback={placeholderText}
-              isTaskList={isTaskActiveTab}
-              onRetry={() => handleFeedFetchFromFeedList()}
-            />
-          }
-          entityThread={entityThread}
-          isActivityLoading={isActivityLoading}
-          isAllTab={isAllTab}
-          isFirstLoad={isFirstLoad}
-          isFullWidth={isFullWidth}
-          isTaskListTab={isTaskActiveTab}
-          loading={loading}
-          selectedActivity={selectedActivity}
-          selectedTask={selectedTask}
-          selectedThread={selectedThread}
-          tasks={tasks}
-          onActivityClick={handleActivityClick}
-          onAfterClose={handleAfterTaskClose}
-          onFeedClick={handleFeedClick}
-          onPanelResize={handlePanelResize}
-          onTaskClick={handleTaskClick}
-        />
+        {listError && !loading ? (
+          <ActivityFeedListError
+            error={listError}
+            isTaskList={isTaskActiveTab}
+            onRetry={() => handleFeedFetchFromFeedList()}
+          />
+        ) : (
+          <ActivityFeedTabList
+            activityEvents={activityEvents}
+            emptyPlaceholderText={placeholderText}
+            entityThread={entityThread}
+            isActivityLoading={isActivityLoading}
+            isAllTab={isAllTab}
+            isFirstLoad={isFirstLoad}
+            isFullWidth={isFullWidth}
+            isTaskListTab={isTaskActiveTab}
+            loading={loading}
+            selectedActivity={selectedActivity}
+            selectedTask={selectedTask}
+            selectedThread={selectedThread}
+            tasks={tasks}
+            onActivityClick={handleActivityClick}
+            onAfterClose={handleAfterTaskClose}
+            onFeedClick={handleFeedClick}
+            onPanelResize={handlePanelResize}
+            onTaskClick={handleTaskClick}
+          />
+        )}
         {!isFirstLoad && loader}
         {hasListRows && !loading && (
           <div
