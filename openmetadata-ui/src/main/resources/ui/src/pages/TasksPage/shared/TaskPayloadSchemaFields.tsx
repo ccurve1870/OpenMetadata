@@ -17,6 +17,7 @@ import {
   Button,
   Checkbox,
   FormItemLabel,
+  Grid,
   Input,
   Select,
   TextArea,
@@ -307,28 +308,32 @@ const TaskPayloadSchemaFields = ({
     children: React.ReactNode,
     iconSrc?: string
   ) => (
-    <Box
-      className="tw:grid tw:grid-cols-[160px_auto_1fr] tw:items-start tw:gap-x-2"
-      key={key}>
-      <Box align="center" className="tw:gap-1.5">
-        {iconSrc && (
-          <img
-            alt=""
-            className="tw:h-4 tw:w-4 tw:shrink-0 tw:object-contain"
-            src={iconSrc}
-          />
-        )}
+    <Grid className="tw:items-start" colGap="2" key={key}>
+      <Grid.Item span={8}>
+        <Box align="center" className="tw:gap-1.5">
+          {iconSrc && (
+            <img
+              alt=""
+              className="tw:h-4 tw:w-4 tw:shrink-0 tw:object-contain"
+              src={iconSrc}
+            />
+          )}
+          <Typography color="secondary" size="text-sm">
+            {label}
+          </Typography>
+        </Box>
+      </Grid.Item>
+      <Grid.Item span={1}>
         <Typography color="secondary" size="text-sm">
-          {label}
+          :
         </Typography>
-      </Box>
-      <Typography color="secondary" size="text-sm">
-        :
-      </Typography>
-      <div className="tw:min-w-0 tw:overflow-hidden tw:wrap-break-word">
+      </Grid.Item>
+      <Grid.Item
+        className="tw:min-w-0 tw:overflow-hidden tw:wrap-break-word"
+        span={15}>
         {children}
-      </div>
-    </Box>
+      </Grid.Item>
+    </Grid>
   );
 
   const renderReadOnlyValue = (value: unknown) => {
