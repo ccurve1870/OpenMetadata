@@ -11,11 +11,7 @@
  *  limitations under the License.
  */
 
-import {
-  Box,
-  EmptyPlaceholder,
-  Typography,
-} from '@openmetadata/ui-core-components';
+import { Box, Typography } from '@openmetadata/ui-core-components';
 import { AxiosError } from 'axios';
 import classNames from 'classnames';
 import React, {
@@ -61,6 +57,7 @@ import { getTaskAboutPath } from '../../../../../utils/TaskNavigationUtils';
 import { isOntologyReviewTask } from '../../../../../utils/TaskUtils';
 import { showErrorToast } from '../../../../../utils/ToastUtils';
 import CommentComposer from '../../../../common/CommentComposer/CommentComposer';
+import NoDataPlaceholder from '../../../../common/EmptyPlaceholder/NoDataPlaceholder';
 import OntologyReviewPanel from '../../../../governance/ontology/OntologyReviewPanel/OntologyReviewPanel';
 import { useApplicationsProvider } from '../../../../Settings/Applications/ApplicationsProvider/ApplicationsProvider';
 import { formatInboxDate, isTaskOpen } from '../inbox.utils';
@@ -311,11 +308,10 @@ const TaskUnavailable = ({
   );
   if (!error || status === ClientErrors.NOT_FOUND) {
     placeholder = (
-      <EmptyPlaceholder
+      <NoDataPlaceholder
         data-testid="task-not-found"
         description={t('message.no-task-found-desc')}
         title={t('label.no-task-found')}
-        variant="blank"
       />
     );
   } else if (status === ClientErrors.FORBIDDEN) {

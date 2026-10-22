@@ -20,7 +20,6 @@ import {
   Box,
   Button,
   Dropdown,
-  EmptyPlaceholder,
   PaginationCardWithControls,
   Skeleton,
   Typography,
@@ -58,6 +57,7 @@ import { computeTotalPages } from '../../../utils/PaginationUtils';
 import searchClassBase from '../../../utils/SearchClassBase';
 import { showErrorToast } from '../../../utils/ToastUtils';
 import { AlertEventDetailsToDisplay } from '../../Alerts/AlertDetails/AlertRecentEventsTab/AlertRecentEventsTab.interface';
+import NoDataPlaceholder from '../../common/EmptyPlaceholder/NoDataPlaceholder';
 import RichTextEditorPreviewNew from '../../common/RichTextEditor/RichTextEditorPreviewNew';
 
 const PAGE_SIZE_OPTIONS = [PAGE_SIZE_BASE, PAGE_SIZE_MEDIUM, PAGE_SIZE_LARGE];
@@ -262,7 +262,7 @@ const AlertAiRecentEventsTab = ({
         // Fills the rest of the viewport so the placeholder centres in the
         // free space below the header instead of hugging the filter row.
         <Box className="tw:relative tw:h-[calc(100vh_-_20rem)] tw:min-h-80 tw:w-full">
-          <EmptyPlaceholder
+          <NoDataPlaceholder
             description={t(
               isFiltered
                 ? 'message.no-data-available-for-selected-filter'
@@ -270,7 +270,7 @@ const AlertAiRecentEventsTab = ({
             )}
             icon={
               isFiltered ? (
-                <FilterLines className="tw:text-fg-quaternary" />
+                <FilterLines />
               ) : (
                 <Bell01 className="tw:text-fg-brand-primary" />
               )
@@ -280,7 +280,6 @@ const AlertAiRecentEventsTab = ({
                 ? 'message.no-results-for-filters'
                 : 'message.no-recent-events'
             )}
-            variant="blank"
           />
         </Box>
       );

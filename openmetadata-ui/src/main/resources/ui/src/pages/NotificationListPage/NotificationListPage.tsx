@@ -14,7 +14,6 @@ import {
   Box,
   Button,
   ButtonUtility,
-  EmptyPlaceholder,
   Grid,
   Skeleton,
   Typography,
@@ -26,6 +25,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import DeleteModal from '../../components/common/DeleteModal/DeleteModal';
+import FeaturesPlaceholder from '../../components/common/EmptyPlaceholder/FeaturesPlaceholder';
 import PermissionPlaceholder from '../../components/common/EmptyPlaceholder/PermissionPlaceholder';
 import SomethingWentWrongPlaceholder from '../../components/common/EmptyPlaceholder/SomethingWentWrongPlaceholder';
 import { PagingHandlerParams } from '../../components/common/NextPrevious/NextPrevious.interface';
@@ -427,7 +427,7 @@ const NotificationListPage = () => {
                 </Box>
               ) : (
                 <Box className="tw:relative tw:min-h-[calc(100vh_-_16rem)] tw:w-full">
-                  <EmptyPlaceholder
+                  <FeaturesPlaceholder
                     actions={
                       canCreateAlert
                         ? [
@@ -461,7 +461,6 @@ const NotificationListPage = () => {
                       })
                     )}
                     title={t('message.observability-alert-empty-heading')}
-                    variant="features"
                   />
                 </Box>
               ),

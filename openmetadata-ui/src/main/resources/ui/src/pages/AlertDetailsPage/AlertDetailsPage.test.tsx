@@ -159,10 +159,6 @@ jest.mock('../../components/common/DeleteModal/DeleteModal', () =>
   jest.fn().mockImplementation(() => <div>DeleteModal</div>)
 );
 
-jest.mock('../../components/common/ErrorWithPlaceholder/ErrorPlaceHolder', () =>
-  jest.fn().mockImplementation(() => <div>ErrorPlaceHolder</div>)
-);
-
 jest.mock('../../components/common/Loader/Loader', () =>
   jest.fn().mockImplementation(() => <div>Loader</div>)
 );
@@ -230,7 +226,11 @@ describe('AlertDetailsPage', () => {
       });
     });
 
-    expect(screen.getByText('ErrorPlaceHolder')).toBeInTheDocument();
+    expect(
+      screen.getByTestId(
+        /(no-data|permission-error|search-error|create-error|assign-error)-placeholder/
+      )
+    ).toBeInTheDocument();
   });
 
   it('should render the breadcrumb and a retryable error when the alert fails to load', async () => {

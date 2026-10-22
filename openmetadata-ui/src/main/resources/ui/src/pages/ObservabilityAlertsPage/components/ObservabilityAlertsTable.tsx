@@ -14,13 +14,13 @@
 import {
   Box,
   Button,
-  EmptyPlaceholder,
   Table,
   TableCard,
 } from '@openmetadata/ui-core-components';
 import { Plus } from '@openmetadata/ui-core-components/icons';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import FeaturesPlaceholder from '../../../components/common/EmptyPlaceholder/FeaturesPlaceholder';
 import PermissionPlaceholder from '../../../components/common/EmptyPlaceholder/PermissionPlaceholder';
 import SomethingWentWrongPlaceholder from '../../../components/common/EmptyPlaceholder/SomethingWentWrongPlaceholder';
 import NextPrevious from '../../../components/common/NextPrevious/NextPrevious';
@@ -162,7 +162,7 @@ function ObservabilityAlertsTable({
 
     return (
       <Box className="tw:relative tw:min-h-[calc(100vh_-_16rem)] tw:w-full">
-        <EmptyPlaceholder
+        <FeaturesPlaceholder
           actions={
             hasCreatePermission
               ? [
@@ -188,7 +188,6 @@ function ObservabilityAlertsTable({
             })
           )}
           title={t('message.observability-alert-empty-heading')}
-          variant="features"
         />
       </Box>
     );

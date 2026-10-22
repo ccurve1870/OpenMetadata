@@ -33,16 +33,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from '../../../components/common/DeleteModal/DeleteModal';
 import DocumentTitle from '../../../components/common/DocumentTitle/DocumentTitle';
-import NoDataPlaceholder from '../../../components/common/EmptyPlaceholder/NoDataPlaceholder';
-import PermissionPlaceholder from '../../../components/common/EmptyPlaceholder/PermissionPlaceholder';
 import SomethingWentWrongPlaceholder from '../../../components/common/EmptyPlaceholder/SomethingWentWrongPlaceholder';
-import ErrorPlaceHolder from '../../../components/common/ErrorWithPlaceholder/ErrorPlaceHolder';
 import HeaderBreadcrumb from '../../../components/common/HeaderBreadcrumb/HeaderBreadcrumb.component';
 import Loader from '../../../components/common/Loader/Loader';
 import { UserTeamSelectableList } from '../../../components/common/UserTeamSelectableList/UserTeamSelectableList.component';
 import { AlertDetailTabs } from '../../../enums/Alerts.enum';
 import { ClientErrors } from '../../../enums/Axios.enum';
-import { ERROR_PLACEHOLDER_TYPE } from '../../../enums/common.enum';
 import {
   AlertType,
   ProviderType,
@@ -55,6 +51,8 @@ import alertsClassBase from '../../../utils/AlertsClassBase';
 import { getEntityName } from '../../../utils/EntityNameUtils';
 import { invalidateQueriesWithoutInitialRace } from '../../../utils/queryCacheUtils';
 import { showErrorToast, showSuccessToast } from '../../../utils/ToastUtils';
+import NoDataPlaceholder from '../../common/EmptyPlaceholder/NoDataPlaceholder';
+import PermissionPlaceholder from '../../common/EmptyPlaceholder/PermissionPlaceholder';
 import { OBSERVABILITY_ALERT_COUNT_QUERY_KEY } from '../observability.constants';
 import ObservabilityPageShell from '../ObservabilityPageShell/ObservabilityPageShell';
 import AlertAiDiagnosticTab from './AlertAiDiagnosticTab';
@@ -157,7 +155,7 @@ const AlertDetailsPage = ({
     fqn,
     sources,
   });
-  const { support } = alertFormState.selection;
+  const { selection } = alertFormState;
 
   const handleConfirmDelete = useCallback(async () => {
     if (!alertDetails?.id) {
@@ -215,16 +213,18 @@ const AlertDetailsPage = ({
     }
 
     if (tab === AlertDetailTabs.CONFIGURATION && alertConfigValue) {
+      // The configuration shows what the server says the sources support, so it waits for it.
+      if (!selection.ready) {
+        return <Loader />;
+      }
+
       return (
         <AlertAiForm
           shouldShowFiltersSection
           alert={alertConfigValue}
-          filterResources={alertFormState.filterResources}
           mode="view"
-          recipientCategories={support.recipientCategories}
+          selection={selection}
           shouldShowActionsSection={kind.hasTriggers}
-          supportedFilters={support.supportedFilters}
-          supportedTriggers={support.supportedTriggers}
           templateResourcePermission={alertFormState.templateResourcePermission}
           templates={alertFormState.templates}
           templatesLoading={alertFormState.loadingState.templates}
@@ -238,12 +238,11 @@ const AlertDetailsPage = ({
     alertConfigValue,
     alertDetails,
     fqn,
-    alertFormState.filterResources,
     alertFormState.loadingState.templates,
     alertFormState.templateResourcePermission,
     alertFormState.templates,
     kind.hasTriggers,
-    support,
+    selection,
     tab,
   ]);
 
@@ -395,13 +394,14 @@ const AlertDetailsPage = ({
   const guardPlaceholder = useMemo<ReactNode | null>(() => {
     if (!loadingCount && !isUndefined(viewPermission) && !viewPermission) {
       return (
-        <ErrorPlaceHolder
-          className="border-none"
-          permissionValue={t('label.view-entity', {
-            entity: t('label.alert-detail-plural'),
-          })}
-          type={ERROR_PLACEHOLDER_TYPE.PERMISSION}
-        />
+        <div className="tw:relative tw:h-full tw:w-full tw:min-h-60 tw:rounded-xl tw:bg-surface">
+          <PermissionPlaceholder
+            data-testid="permission-error-placeholder"
+            permissionValue={t('label.view-entity', {
+              entity: t('label.alert-detail-plural'),
+            })}
+          />
+        </div>
       );
     }
 

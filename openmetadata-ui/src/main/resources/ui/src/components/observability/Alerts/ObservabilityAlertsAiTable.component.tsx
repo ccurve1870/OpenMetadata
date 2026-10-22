@@ -14,7 +14,6 @@
 import {
   Box,
   Button,
-  EmptyPlaceholder,
   PaginationCardWithControls,
   Table,
   TableCard,
@@ -55,6 +54,7 @@ import {
 } from '../../../pages/ObservabilityAlertsPage/ObservabilityAlertsPage.utils';
 import { getEntityName } from '../../../utils/EntityNameUtils';
 import { computeTotalPages } from '../../../utils/PaginationUtils';
+import FeaturesPlaceholder from '../../common/EmptyPlaceholder/FeaturesPlaceholder';
 import ObservabilityAlertAiActions from './ObservabilityAlertAiActions.component';
 
 interface ObservabilityAlertsAiPageChangeParams {
@@ -104,7 +104,7 @@ function AlertsEmptyState({
 
   return (
     <Box className="tw:relative tw:min-h-[calc(100vh_-_16rem)] tw:w-full">
-      <EmptyPlaceholder
+      <FeaturesPlaceholder
         actions={
           hasCreatePermission
             ? [
@@ -123,7 +123,6 @@ function AlertsEmptyState({
         description={t('message.observability-alert-empty-description')}
         features={features}
         title={t('message.observability-alert-empty-heading')}
-        variant="features"
       />
     </Box>
   );

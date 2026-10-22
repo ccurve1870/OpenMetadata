@@ -109,7 +109,6 @@ jest.mock('../../rest/observabilityAPI', () => ({
       alert: 'Observability',
     })
   ),
-  getResourceFunctions: jest.fn(),
   updateObservabilityAlert: jest.fn().mockImplementation(() =>
     Promise.resolve({
       id: 'test',
@@ -120,7 +119,6 @@ jest.mock('../../rest/observabilityAPI', () => ({
 
 jest.mock('../../rest/alertsAPI', () => ({
   getAlertsFromName: jest.fn(),
-  getResourceFunctions: jest.fn(),
   createNotificationAlert: jest.fn(),
   updateNotificationAlert: jest.fn(),
 }));

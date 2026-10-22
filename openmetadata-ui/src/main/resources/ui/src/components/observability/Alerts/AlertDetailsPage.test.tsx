@@ -129,6 +129,8 @@ jest.mock('@openmetadata/ui-core-components', () => {
   );
 
   return {
+    EmptyPlaceholder: jest.requireActual('@openmetadata/ui-core-components')
+      .EmptyPlaceholder,
     Box: ({
       children,
       'data-testid': testId,
@@ -148,25 +150,6 @@ jest.mock('@openmetadata/ui-core-components', () => {
       <button data-testid={testId} disabled={isDisabled} onClick={onClick}>
         {testId}
       </button>
-    ),
-    EmptyPlaceholder: ({
-      actions,
-      description,
-      title,
-    }: {
-      actions?: { key: string; label: string; onPress?: () => void }[];
-      description?: ReactNode;
-      title?: ReactNode;
-    }) => (
-      <div>
-        <span>{title}</span>
-        <span>{description}</span>
-        {actions?.map((action) => (
-          <button key={action.key} onClick={action.onPress}>
-            {action.label}
-          </button>
-        ))}
-      </div>
     ),
     Owner: jest.fn(() => <div data-testid="owner-label" />),
     PageLayout: {
@@ -207,10 +190,8 @@ jest.mock('@openmetadata/ui-core-components', () => {
 });
 
 jest.mock('@openmetadata/ui-core-components/icons', () => ({
-  AlertTriangle: () => null,
-  Database01: () => null,
-  Lock01: () => null,
-  Edit01: () => null,
+  ...jest.requireActual('@openmetadata/ui-core-components/icons'),
+  Edit03: () => null,
   RefreshCw04: () => null,
   Trash01: () => null,
 }));
@@ -226,16 +207,6 @@ jest.mock('../../../components/common/Loader/Loader', () => ({
   __esModule: true,
   default: () => <div data-testid="loader" />,
 }));
-
-jest.mock(
-  '../../../components/common/ErrorWithPlaceholder/ErrorPlaceHolder',
-  () => ({
-    __esModule: true,
-    default: ({ permissionValue }: { permissionValue?: string }) => (
-      <div data-testid="error-placeholder">{permissionValue}</div>
-    ),
-  })
-);
 
 jest.mock('../../../components/common/DeleteModal/DeleteModal', () => ({
   __esModule: true,
@@ -264,17 +235,17 @@ jest.mock('./AlertAiForm.component', () => ({
   __esModule: true,
   default: ({
     mode,
+    selection,
     shouldShowActionsSection,
-    supportedFilters,
-    supportedTriggers,
     templateResourcePermission,
     value,
   }: {
     mode: string;
+    selection: {
+      support: { supportedFilters?: unknown[]; supportedTriggers?: unknown[] };
+    };
     shouldShowActionsSection?: boolean;
     templateResourcePermission?: Record<string, boolean>;
-    supportedFilters?: unknown[];
-    supportedTriggers?: unknown[];
     value: ModifiedEventSubscription;
   }) => (
     <div data-testid="alert-ai-form">
@@ -286,8 +257,12 @@ jest.mock('./AlertAiForm.component', () => ({
         {JSON.stringify(templateResourcePermission ?? null)}
       </span>
       <span data-testid="form-name">{value.name}</span>
-      <span data-testid="filters-count">{supportedFilters?.length ?? 0}</span>
-      <span data-testid="triggers-count">{supportedTriggers?.length ?? 0}</span>
+      <span data-testid="filters-count">
+        {selection.support.supportedFilters?.length ?? 0}
+      </span>
+      <span data-testid="triggers-count">
+        {selection.support.supportedTriggers?.length ?? 0}
+      </span>
     </div>
   ),
 }));
@@ -439,17 +414,11 @@ const getDetailsState = (overrides = {}) => ({
   ...overrides,
 });
 
-const getFormState = () => ({
-  filterResources: [
-    {
-      name: 'table',
-      supportedActions: [{ name: 'action' }],
-      supportedFilters: [{ name: 'filter' }],
-    },
-  ],
-  loadingState: { alerts: false, functions: false, templates: false },
+const getFormState = (ready = true) => ({
+  loadingState: { alerts: false, templates: false },
   // What the server says the alert's sources support.
   selection: {
+    ready,
     support: {
       supportedFilters: [{ name: 'filter' }],
       supportedTriggers: [{ name: 'action' }],
@@ -484,9 +453,11 @@ describe('AlertDetailsPage', () => {
 
     renderPage(<AlertDetailsPage />);
 
-    expect(screen.getByTestId('error-placeholder')).toHaveTextContent(
-      'label.view-entity:label.alert-detail-plural'
-    );
+    expect(
+      screen.getByTestId(
+        /(no-data|permission-error|search-error|create-error|assign-error)-placeholder/
+      )
+    ).toHaveTextContent('label.view-entity:label.alert-detail-plural');
   });
 
   it('renders a retryable load error under the page header when the alert fails to load', () => {
@@ -584,6 +555,14 @@ describe('AlertDetailsPage', () => {
     expect(mockUseAlertFormData).toHaveBeenLastCalledWith(
       expect.objectContaining({ sources: ['table'] })
     );
+  });
+
+  it('waits for the server before it shows the configuration', () => {
+    mockUseAlertFormData.mockReturnValue(getFormState(false));
+    renderPage(<AlertDetailsPage />);
+
+    expect(screen.queryByTestId('form-mode')).not.toBeInTheDocument();
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
   });
 
   it('renders the header meta row with owner and event stats', () => {
