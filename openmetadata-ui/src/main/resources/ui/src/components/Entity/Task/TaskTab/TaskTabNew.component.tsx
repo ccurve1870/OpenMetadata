@@ -16,6 +16,7 @@ import {
   Dialog,
   Divider,
   FormItemLabel,
+  Grid,
   HintText,
   Modal,
   ModalOverlay,
@@ -1570,17 +1571,21 @@ export const TaskTabNew = ({
           }
         )}>
         <div className="d-flex gap-2 tw:w-full" data-testid="task-assignees">
-          <div className="tw:grid tw:w-full tw:grid-cols-[160px_auto_1fr] tw:items-center tw:gap-x-2 tw:gap-y-4">
-            <Box align="center" className="text-grey-muted" gap={2}>
-              <UserIcon height={16} />
-              <Typography className="incident-manager-details-label">
-                {t('label.created-by')}
+          <Grid className="tw:w-full tw:items-center" colGap="2" rowGap="4">
+            <Grid.Item span={8}>
+              <Box align="center" className="text-grey-muted" gap={2}>
+                <UserIcon height={16} />
+                <Typography className="incident-manager-details-label">
+                  {t('label.created-by')}
+                </Typography>
+              </Box>
+            </Grid.Item>
+            <Grid.Item span={1}>
+              <Typography color="secondary" size="text-sm">
+                :
               </Typography>
-            </Box>
-            <Typography color="secondary" size="text-sm">
-              :
-            </Typography>
-            <div className="tw:min-w-0">
+            </Grid.Item>
+            <Grid.Item span={15}>
               <Link
                 className="no-underline flex items-center gap-2"
                 to={getUserPath(task.createdBy?.name ?? '')}>
@@ -1595,22 +1600,26 @@ export const TaskTabNew = ({
 
                 <Typography>{getEntityName(task.createdBy)}</Typography>
               </Link>
-            </div>
+            </Grid.Item>
 
             {isEditAssignee ? (
-              <div className="tw:col-span-3">{renderAssigneeEditor()}</div>
+              <Grid.Item span={24}>{renderAssigneeEditor()}</Grid.Item>
             ) : (
               <>
-                <Box align="center" className="text-grey-muted" gap={2}>
-                  <AssigneesIcon height={16} />
-                  <Typography className="incident-manager-details-label @grey-8">
-                    {t('label.assignee-plural')}
+                <Grid.Item span={8}>
+                  <Box align="center" className="text-grey-muted" gap={2}>
+                    <AssigneesIcon height={16} />
+                    <Typography className="incident-manager-details-label @grey-8">
+                      {t('label.assignee-plural')}
+                    </Typography>
+                  </Box>
+                </Grid.Item>
+                <Grid.Item span={1}>
+                  <Typography color="secondary" size="text-sm">
+                    :
                   </Typography>
-                </Box>
-                <Typography color="secondary" size="text-sm">
-                  :
-                </Typography>
-                <Box className="tw:min-w-0" gap={2}>
+                </Grid.Item>
+                <Grid.Item className="tw:flex tw:gap-2" span={15}>
                   {task?.assignees?.length === 1 ? (
                     <div className="d-flex items-center gap-2">
                       <UserPopOverCard userName={task?.assignees[0].name ?? ''}>
@@ -1635,10 +1644,10 @@ export const TaskTabNew = ({
                       showLabel={false}
                     />
                   )}
-                </Box>
+                </Grid.Item>
               </>
             )}
-          </div>
+          </Grid>
         </div>
       </div>
     );

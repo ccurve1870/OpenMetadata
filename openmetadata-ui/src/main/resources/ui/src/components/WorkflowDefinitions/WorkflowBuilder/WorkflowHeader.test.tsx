@@ -55,6 +55,8 @@ jest.mock('@openmetadata/ui-core-components', () => ({
   Card: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="workflow-header">{children}</div>
   ),
+  FeaturedIcon: jest.requireActual('@openmetadata/ui-core-components')
+    .FeaturedIcon,
   Dialog: ({
     children,
     title,

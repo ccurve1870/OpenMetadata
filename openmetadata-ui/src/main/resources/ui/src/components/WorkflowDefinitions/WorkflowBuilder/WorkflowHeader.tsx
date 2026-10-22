@@ -18,6 +18,7 @@ import {
   Card,
   Dialog,
   Dropdown,
+  FeaturedIcon,
   Input,
   Modal,
   ModalOverlay,
@@ -264,9 +265,7 @@ export const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
   );
 
   const workflowIcon = (
-    <div className="tw:flex tw:items-center tw:justify-center tw:size-8 tw:shrink-0 tw:rounded-md tw:bg-brand-solid">
-      <WorkflowIcon className="tw:size-4 tw:text-white" />
-    </div>
+    <FeaturedIcon color="brand" icon={WorkflowIcon} size="sm" theme="dark" />
   );
 
   // The host page shows the title, so only the controls that act on the workflow remain.
