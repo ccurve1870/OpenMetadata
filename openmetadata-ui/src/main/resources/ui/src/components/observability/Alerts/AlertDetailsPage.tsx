@@ -290,9 +290,13 @@ const AlertDetailsPage = ({
               className="tw:min-w-0 tw:shrink-0"
               data-testid="alert-owners"
               gap={2}>
-              <span className="tw:text-sm tw:font-medium tw:text-secondary">
+              <Typography
+                as="span"
+                color="secondary"
+                size="text-sm"
+                weight="medium">
                 {t('label.owner-plural')}
-              </span>
+              </Typography>
               {!isEmpty(alertDetails?.owners) && (
                 <Owner owners={alertDetails?.owners} />
               )}
